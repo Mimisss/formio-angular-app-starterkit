@@ -11,7 +11,7 @@ import { AppConfig } from 'src/app/config';
 export class LoginComponent extends FormioAuthLoginComponent implements OnInit {
 
   constructor(public service: FormioAuthService) { 
-    super(service);
+    super(service);    
   }
 
   ngOnInit(): void {
@@ -19,6 +19,10 @@ export class LoginComponent extends FormioAuthLoginComponent implements OnInit {
     Formio.createForm(document.getElementById('formio'), this.service.loginForm, {
       language: 'en',
     }).then((form) => {
+      form.on('submit', (submission) => {
+        // otherwise the onLogin callback set in app.component.ts is not called
+        this.service.onLoginSubmit(submission);
+      });
 
       Formio.fetch(AppConfig.appUrl + '/language/submission?data.language=el').then((response) => {
         response.json().then((result) => {
