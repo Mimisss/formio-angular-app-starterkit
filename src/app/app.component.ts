@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
+import { FormioResources } from '@formio/angular/resource';
+import { FormioAuthService } from '@formio/angular/auth';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +10,22 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'angular-app-starterkit';
+
+  constructor(
+    public auth: FormioAuthService,
+    private router: Router,
+    public resources: FormioResources
+  ) {
+    this.auth.onLogin.subscribe(() => {
+      this.router.navigate(['/']);
+    });
+
+    this.auth.onLogout.subscribe(() => {
+      this.router.navigate(['/auth/login']);
+    });
+
+    this.auth.onRegister.subscribe(() => {
+      this.router.navigate(['/']);
+    });
+  }  
 }
